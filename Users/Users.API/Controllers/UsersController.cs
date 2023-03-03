@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Users.API.Exceptions;
 using Users.API.Model;
 using Users.API.Services;
 
@@ -38,10 +39,9 @@ namespace Users.API.Controllers
                 _usersService.AddUser(user);
                 return Created(Request.GetDisplayUrl(), user);
             }
-            catch (Exception)
+            catch (UserAlreadyExistsException ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
