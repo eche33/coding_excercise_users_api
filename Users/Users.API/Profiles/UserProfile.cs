@@ -10,6 +10,7 @@ namespace Users.API.Profiles
         public UserProfile()
         { 
             CreateMap<User, UserDTO>();
+            CreateMap<UserForCreationDTO, User>();
         }
     }
 }

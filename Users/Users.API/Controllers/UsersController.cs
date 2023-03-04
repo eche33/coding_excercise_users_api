@@ -61,8 +61,10 @@ namespace Users.API.Controllers
 
         // POST api/<UsersController>
         [HttpPost]
-        public IActionResult Post([FromBody] User user)
+        public IActionResult Post([FromBody] UserForCreationDTO userForCreation)
         {
+            var user = _mapper.Map<User>(userForCreation);
+
             try
             {
                 _usersService.AddUser(user);
