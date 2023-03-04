@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Users.API.Exceptions;
 using Users.API.Model;
+using Users.API.Model.DTOs;
 using Users.API.Services;
 
 namespace Users.API.Controllers
@@ -10,17 +12,24 @@ namespace Users.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        IUsersService _usersService;
-        public UsersController(IUsersService usersServices)
+        private readonly IUsersService _usersService;
+        private readonly IMapper _mapper;
+
+        public UsersController(IUsersService usersServices, IMapper mapper)
         {
             _usersService = usersServices;
+            _mapper = mapper;
         }
 
         // GET: api/<UsersController>
         [HttpGet]
         public IActionResult GetAllUsers()
         {
-            return Ok(_usersService.FetchAllUsers());
+            var users = _usersService.FetchAllUsers();
+
+            var usersDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
+
+            return Ok(usersDTOs);
         }
 
         // GET api/<UsersController>/5
@@ -42,6 +51,10 @@ namespace Users.API.Controllers
             catch (UserAlreadyExistsException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Internal error ocurred. Please contact support" });
             }
         }
 
