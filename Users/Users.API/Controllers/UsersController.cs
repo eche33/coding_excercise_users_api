@@ -67,7 +67,7 @@ namespace Users.API.Controllers
 
         [HttpPost]
         [SwaggerOperation(Summary = "Creates a new user")]
-        [SwaggerResponse(201, "User created", typeof(UserForCreationDTO))]
+        [SwaggerResponse(201, "User created", typeof(User))]
         [SwaggerResponse(400, "Missing information to create user", typeof(IDictionary<string, string>))]
         [SwaggerResponse(500, "Internal error", typeof(string))]
         public IActionResult Post([FromBody] UserForCreationDTO userForCreation)
