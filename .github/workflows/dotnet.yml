@@ -23,6 +23,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./Users/Users.sln
     - name: Build
-      run: dotnet build Users\Users.sln --no-restore
+      run: dotnet build ./Users/Users.sln --no-restore
     - name: Test
-      run: dotnet test Users\Users.sln --no-build --verbosity normal
+      run: dotnet test ./Users/Users.sln --no-build --verbosity normal
