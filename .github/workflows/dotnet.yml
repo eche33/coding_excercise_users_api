@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore Users\Users.sln
+      run: dotnet restore ./Users/Users.sln
     - name: Build
       run: dotnet build Users\Users.sln --no-restore
     - name: Test
