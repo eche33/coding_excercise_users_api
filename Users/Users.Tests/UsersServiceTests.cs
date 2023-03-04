@@ -12,6 +12,14 @@ namespace Users.Tests
     public class UsersServiceTests
     {
         [Fact]
+        public void FetchAllUsers_NoUsersInMemory_EmptyCollectionReturned()
+        {
+            var usersService = new UsersService();
+
+            Assert.Empty(usersService.FetchAllUsers());
+        }
+
+        [Fact]
         public void AddUser_ValidUserPassed_UserIsAddedSuccessfullyAsync()
         {
             var user = new User("Rodrigo", "Etchegaray", DateTime.Parse("1995-02-08"), "test@test.com");
@@ -38,6 +46,27 @@ namespace Users.Tests
             Assert.Throws<UserAlreadyExistsException>(() => usersService.AddUser(userWithSameEmail));
 
             usersService.DeleteUser("test@test.com");
+        }
+
+        [Fact]
+        public void FetchUser_UserExists_UserIsReturned()
+        {
+            var user = new User("Rodrigo", "Etchegaray", DateTime.Parse("1995-02-08"), "test@test.com");
+            var usersService = new UsersService();
+
+            usersService.AddUser(user);
+
+            Assert.Equal(user, usersService.FetchUser("test@test.com"));
+
+            usersService.DeleteUser("test@test.com");
+        }
+
+        [Fact]
+        public void FetchUser_UserDoesntExist_UserNotFoundExceptionThrown()
+        {
+            var usersService = new UsersService();
+
+            Assert.Throws<UserNotFoundException>( () => usersService.FetchUser("test@test.com"));
         }
 
     }

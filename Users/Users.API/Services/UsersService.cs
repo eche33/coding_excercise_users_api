@@ -29,7 +29,12 @@ namespace Users.API.Services
 
         public User FetchUser(string email)
         {
-            return _users.FirstOrDefault(x => x.Email.Equals(email));
+            var user = _users.FirstOrDefault(x => x.Email.Equals(email));
+
+            if (user == null)
+                throw new UserNotFoundException($"User with email {email} not found");
+            else
+                return user;
         }
 
         

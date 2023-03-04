@@ -25,18 +25,38 @@ namespace Users.API.Controllers
         [HttpGet]
         public IActionResult GetAllUsers()
         {
-            var users = _usersService.FetchAllUsers();
+            try
+            {
+                var users = _usersService.FetchAllUsers();
 
-            var usersDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
+                var usersDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
 
-            return Ok(usersDTOs);
+                return Ok(usersDTOs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Internal error ocurred. Please contact support" });
+            }
         }
 
         // GET api/<UsersController>/5
         [HttpGet("{email}")]
-        public string GetUser(string email)
+        public IActionResult GetUser(string email)
         {
-            return "Hola";
+            try
+            {
+                var user = _usersService.FetchUser(email);
+                var userDTO = _mapper.Map<UserDTO>(user);
+                return Ok(userDTO);
+            }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Internal error ocurred. Please contact support" });
+            }
         }
 
         // POST api/<UsersController>
