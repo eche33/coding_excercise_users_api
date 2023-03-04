@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using Users.API.Exceptions;
 using Users.API.Model;
 using Users.API.Model.DTOs;
@@ -21,8 +22,10 @@ namespace Users.API.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/<UsersController>
         [HttpGet]
+        [SwaggerOperation(Summary = "Retrieves all users")]
+        [SwaggerResponse(200, "All users returned", typeof(IEnumerable<UserDTO>))]
+        [SwaggerResponse(500, "Internal error", typeof(string))]
         public IActionResult GetAllUsers()
         {
             try
@@ -39,8 +42,11 @@ namespace Users.API.Controllers
             }
         }
 
-        // GET api/<UsersController>/5
         [HttpGet("{email}")]
+        [SwaggerOperation(Summary = "Retrieves user with email")]
+        [SwaggerResponse(200, "User returned", typeof(UserDTO))]
+        [SwaggerResponse(404, "User not found", typeof(string))]
+        [SwaggerResponse(500, "Internal error", typeof(string))]
         public IActionResult GetUser(string email)
         {
             try
@@ -59,8 +65,11 @@ namespace Users.API.Controllers
             }
         }
 
-        // POST api/<UsersController>
         [HttpPost]
+        [SwaggerOperation(Summary = "Creates a new user")]
+        [SwaggerResponse(201, "User created", typeof(UserForCreationDTO))]
+        [SwaggerResponse(400, "Missing information to create user", typeof(IDictionary<string, string>))]
+        [SwaggerResponse(500, "Internal error", typeof(string))]
         public IActionResult Post([FromBody] UserForCreationDTO userForCreation)
         {
             var user = _mapper.Map<User>(userForCreation);
