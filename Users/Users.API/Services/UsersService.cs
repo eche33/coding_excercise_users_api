@@ -22,6 +22,18 @@ namespace Users.API.Services
                 _users.Remove(userToDelete);    
         }
 
+        public void UpdateUser(User user)
+        {
+            var userToUpdate = FetchUser(user.Email);
+
+            if (userToUpdate != null)
+            {
+                userToUpdate.FirstName = user.FirstName;
+                userToUpdate.LastName = user.LastName;
+                userToUpdate.DateOfBirth = user.DateOfBirth;
+            }
+        }
+
         public IEnumerable<User> FetchAllUsers()
         {
             return _users;

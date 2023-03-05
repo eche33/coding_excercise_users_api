@@ -43,7 +43,7 @@ namespace Users.API.Controllers
         }
 
         [HttpGet("{email}")]
-        [SwaggerOperation(Summary = "Retrieves user with email")]
+        [SwaggerOperation(Summary = "Retrieves specific user")]
         [SwaggerResponse(200, "User returned", typeof(UserDTO))]
         [SwaggerResponse(404, "User not found", typeof(string))]
         [SwaggerResponse(500, "Internal error", typeof(string))]
@@ -82,6 +82,31 @@ namespace Users.API.Controllers
             catch (UserAlreadyExistsException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Internal error ocurred. Please contact support" });
+            }
+        }
+
+        [HttpPut]
+        [SwaggerOperation(Summary = "Updates a user")]
+        [SwaggerResponse(200, "User updated", typeof(User))]
+        [SwaggerResponse(400, "Missing information to update user", typeof(IDictionary<string, string>))]
+        [SwaggerResponse(404, "User not found", typeof(string))]
+        [SwaggerResponse(500, "Internal error", typeof(string))]
+        public IActionResult Put([FromBody] UserForCreationDTO userForCreation)
+        {
+            var user = _mapper.Map<User>(userForCreation);
+
+            try
+            {
+                _usersService.UpdateUser(user);
+                return Ok(user);
+            }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {

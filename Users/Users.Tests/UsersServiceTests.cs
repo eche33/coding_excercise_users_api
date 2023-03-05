@@ -11,6 +11,7 @@ namespace Users.Tests
 {
     public class UsersServiceTests
     {
+        
         [Fact]
         public void FetchAllUsers_NoUsersInMemory_EmptyCollectionReturned()
         {
@@ -69,5 +70,39 @@ namespace Users.Tests
             Assert.Throws<UserNotFoundException>( () => usersService.FetchUser("test@test.com"));
         }
 
+        [Fact]
+        public void DeleteUser_UserDoesntExist_UserNotFoundExceptionThrown()
+        {
+            var usersService = new UsersService();
+
+            Assert.Throws<UserNotFoundException>( () => usersService.DeleteUser("test@test.com"));
+        }
+
+        [Fact]
+        public void UpdateUser_UserDoesntExist_UserNotFoundExceptionThrown()
+        {
+            var usersService = new UsersService();
+
+            var user = new User("Rodrigo", "Etchegaray", DateTime.Parse("1995-02-08"), "user@some.com");
+
+            Assert.Throws<UserNotFoundException>( () => usersService.UpdateUser(user));
+        }
+
+         [Fact]
+        public void UpdateUser_UserExists_UserFirstNameUpdated()
+        {
+            var usersService = new UsersService();
+            var user = new User("Rodrigo", "Etchegaray", DateTime.Parse("1995-02-08"), "test@test.com");
+            usersService.AddUser(user);
+
+            Assert.Equal("Rodrigo", usersService.FetchUser("test@test.com").FirstName);
+
+            var userUpdated = new User("Ramiro", "Etchegaray", DateTime.Parse("1995-02-08"), "test@test.com");
+            usersService.UpdateUser(userUpdated);
+
+            Assert.Equal("Ramiro", usersService.FetchUser("test@test.com").FirstName);
+
+             usersService.DeleteUser("test@test.com");
+        }
     }
 }

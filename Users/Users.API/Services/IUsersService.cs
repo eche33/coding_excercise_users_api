@@ -8,5 +8,6 @@ namespace Users.API.Services
         public IEnumerable<User> FetchAllUsers();
         public void AddUser(User user);
         public void DeleteUser(string email);
+        public void UpdateUser(User user);
     }
 }
