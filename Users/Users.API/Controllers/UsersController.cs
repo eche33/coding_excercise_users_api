@@ -114,16 +114,26 @@ namespace Users.API.Controllers
             }
         }
 
-        //// PUT api/<UsersController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/<UsersController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+        [HttpDelete("{email}")]
+        [SwaggerOperation(Summary = "Deletes a user")]
+        [SwaggerResponse(200, "User deleted", typeof(User))]
+        [SwaggerResponse(404, "User not found", typeof(string))]
+        [SwaggerResponse(500, "Internal error", typeof(string))]
+        public IActionResult Delete(string email)
+        {
+            try
+            {
+                _usersService.DeleteUser(email);
+                return Ok($"User with email {email} deleted");
+            }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Internal error ocurred. Please contact support" });
+            }
+        }
     }
 }
